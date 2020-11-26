@@ -23,11 +23,14 @@ import (
 	"weak_passwd_scan/vars"
 )
 
+/*扫描函数最外层封装, 循环依次扫描本次Task包含的协议*/
 func Scan(task models.InputParam, scanResult *[]models.OutResult) (err error) {
+	vars.SuccessHash = make(map[string]bool)
+
 	ip := task.Ip
-	for i := 0; i < task.Num; i++ {
+	for i := 0; i < len(task.Item); i++ {
 		service := task.Item[i]
-		err := GenerateTask(ip, service, scanResult)
+		err := generateTask(ip, service, scanResult)
 		if err != nil {
 			logs.Log.Println("[error]	GenerateTask error: ", err.Error())
 			return err
@@ -37,7 +40,8 @@ func Scan(task models.InputParam, scanResult *[]models.OutResult) (err error) {
 	return nil
 }
 
-func GenerateTask(ip string, service models.ScanParam, scanResult *[]models.OutResult) (err error) {
+/*组合Ip、Port、Protocol、Username、Password参数通过chan作为数据流通渠道，并发执行扫描*/
+func generateTask(ip string, service models.ScanParam, scanResult *[]models.OutResult) (err error) {
 	tasks := make([]models.ScanTask, 0)
 
 	protocol := strings.ToUpper(service.Protocol)
@@ -91,9 +95,9 @@ func GenerateTask(ip string, service models.ScanParam, scanResult *[]models.OutR
 	return nil
 }
 
+/*根据从chan获取的扫描任务数据，调用不同协议扫描函数，保存破解成功的结果*/
 func crackPassword(taskChan chan models.ScanTask, wg *sync.WaitGroup, scanResult *[]models.OutResult) {
 	for task := range taskChan {
-
 		/*测试日志*/
 		logs.Log.Printf("[info]	Ip: %v, Port: %v, [%v], UserName: %v, Password: %v, goroutineNum: %v", task.Ip, task.Port,
 			task.Protocol, task.Username, task.Password, runtime.NumGoroutine())
@@ -115,12 +119,12 @@ func crackPassword(taskChan chan models.ScanTask, wg *sync.WaitGroup, scanResult
 
 		fn := plugins.ScanFuncMap[protocol]
 		err, result := fn(task)
-		SaveResult(err, result, scanResult)
+		saveResult(err, result, scanResult)
 		wg.Done()
 	}
 }
 
-func SaveResult(err error, result models.ScanResult, sumScanResult *[]models.OutResult) {
+func saveResult(err error, result models.ScanResult, sumScanResult *[]models.OutResult) {
 	if err == nil && result.Result {
 		var k string
 		protocol := strings.ToUpper(result.Task.Protocol)
@@ -134,7 +138,7 @@ func SaveResult(err error, result models.ScanResult, sumScanResult *[]models.Out
 		h := hash.MakeTaskHash(k)
 		isExist := hash.SetTaskHask(h)
 
-		if true != isExist {
+		if !isExist {
 			vars.Mutex.Lock()
 			result := models.OutResult{Protocol: result.Task.Protocol, Port: result.Task.Port, Username: result.Task.Username, Passwd: result.Task.Password}
 			*sumScanResult = append(*sumScanResult, result)

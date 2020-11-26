@@ -35,7 +35,7 @@ func main() {
 		}
 
 		//执行扫描并保存破解成功后结果
-		scanResult := make([]models.OutResult, 0)
+		var scanResult []models.OutResult
 		err = utils.Scan(task, &scanResult)
 		if err != nil {
 			logs.Log.Println("[error]	Scan error: ", err.Error())
