@@ -12,7 +12,6 @@ package utils
 
 import (
 	"fmt"
-	"runtime"
 	"strings"
 	"sync"
 	"time"
@@ -41,15 +40,15 @@ func Scan(task models.InputParam, scanResult *[]models.OutResult) (err error) {
 }
 
 /*组合Ip、Port、Protocol、Username、Password参数通过chan作为数据流通渠道，并发执行扫描*/
-func generateTask(ip string, service models.ScanParam, scanResult *[]models.OutResult) (err error) {
+func generateTask(ip string, service models.ScanParam, scanResult *[]models.OutResult) error {
 	tasks := make([]models.ScanTask, 0)
 
 	protocol := strings.ToUpper(service.Protocol)
 	if protocol == "SNMP" || protocol == "REDIS" {
 		passwdDict, pErr := ReadPasswordDict(service.PasswdDict)
 		if pErr != nil {
-			logs.Log.Println("[error]	ReadPasswordDict error: ", err.Error())
-			return err
+			logs.Log.Println("[error]	ReadPasswordDict error: ", pErr.Error())
+			return pErr
 		}
 
 		for _, passwd := range passwdDict {
@@ -59,14 +58,14 @@ func generateTask(ip string, service models.ScanParam, scanResult *[]models.OutR
 	} else {
 		usernameDict, uErr := ReadUserDict(service.UserDict)
 		if uErr != nil {
-			logs.Log.Println("[error]	ReadUserDict error: ", err.Error())
-			return err
+			logs.Log.Println("[error]	ReadUserDict error: ", uErr.Error())
+			return uErr
 		}
 
 		passwdDict, pErr := ReadPasswordDict(service.PasswdDict)
 		if pErr != nil {
-			logs.Log.Println("[error]	ReadPasswordDict error: ", err.Error())
-			return err
+			logs.Log.Println("[error]	ReadPasswordDict error: ", pErr.Error())
+			return pErr
 		}
 
 		for _, user := range usernameDict {
@@ -99,8 +98,8 @@ func generateTask(ip string, service models.ScanParam, scanResult *[]models.OutR
 func crackPassword(taskChan chan models.ScanTask, wg *sync.WaitGroup, scanResult *[]models.OutResult) {
 	for task := range taskChan {
 		/*测试日志*/
-		logs.Log.Printf("[info]	Ip: %v, Port: %v, [%v], UserName: %v, Password: %v, goroutineNum: %v", task.Ip, task.Port,
-			task.Protocol, task.Username, task.Password, runtime.NumGoroutine())
+		//logs.Log.Printf("[info]	Ip: %v, Port: %v, [%v], UserName: %v, Password: %v, goroutineNum: %v", task.Ip, task.Port,
+		//	task.Protocol, task.Username, task.Password, runtime.NumGoroutine())
 
 		var k string
 		protocol := strings.ToUpper(task.Protocol)
@@ -117,6 +116,10 @@ func crackPassword(taskChan chan models.ScanTask, wg *sync.WaitGroup, scanResult
 			continue
 		}
 
+		/*
+			注意!
+			关注plugins.ScanFuncMap值，输入参数中协议名称和 代码中协议名称需对应（如sql_server，代码里为mssql）
+		*/
 		fn := plugins.ScanFuncMap[protocol]
 		err, result := fn(task)
 		saveResult(err, result, scanResult)

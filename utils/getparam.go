@@ -27,12 +27,20 @@ func GetInputParameter(client *redis.Client, task *models.InputParam) (err error
 	//client.LPush("list1", testInputJson)
 	//测试：模拟构造json输入参数，并存进redis		end
 
+	/*
+		注意!
+		key名字要改
+	*/
 	inputParam, err := client.BLPop(0, "list1").Result()
 	if err != nil {
 		logs.Log.Println("[error]	BLPop error: ", err.Error())
 		return err
 	}
 
+	/*
+		注意!
+		反序列化时可能会丢失一些字段，若丢失，则需要更改输入参数字段名与models.go中InputParam与ScanParam相同
+	*/
 	err = json.Unmarshal([]byte(inputParam[1]), task)
 	if err != nil {
 		logs.Log.Println("[error]	Unmarshal error: ", err.Error())

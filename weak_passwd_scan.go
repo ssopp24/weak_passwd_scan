@@ -17,13 +17,17 @@ import (
 func main() {
 	for {
 		//	连接redis
+		/*
+			注意!
+			这里IP，端口，密码需修改
+		*/
 		rdb := redis.NewClient(&redis.Options{
 			Addr:     "192.168.28.191:6379",
 			Password: "",
 			DB:       0,
 		})
 		//defer rdb.Close()
-		logs.Log.Println("\n")
+		logs.Log.Println("")
 		logs.Log.Println("[info]	Connect redis success")
 
 		//	获取输入参数并转化格式
