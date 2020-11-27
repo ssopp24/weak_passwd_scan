@@ -8,6 +8,6 @@ import (
 )
 
 func TestScanImap(t *testing.T) {
-	s := models.ScanTask{Ip: "192.168.28.164", Port: 143, Protocol: "imap", Username: "imapuner", Password: "qscvhuksd"}
+	s := models.ScanTask{Ip: "192.168.28.191", Port: 143, Protocol: "imap", Username: "ssopp24", Password: "zjw195126"}
 	t.Log(plugins.ScanImap(s))
 }

@@ -35,13 +35,20 @@ func expect(t *telnet.Conn, d ...string) {
 func ScanTelnet(s models.ScanTask) (err error, result models.ScanResult) {
 	result.Task = s
 
+	var prompt string
+	if s.Username == "root" {
+		prompt = "#"
+	} else {
+		prompt = "$"
+	}
+
 	t, err := telnet.DialTimeout("tcp", fmt.Sprintf("%v:%v", s.Ip, s.Port), vars.TimeOut)
 	if nil == err {
 		expect(t, "login: ")
 		sendln(t, s.Username)
 		expect(t, "Password: ")
 		sendln(t, s.Password)
-		expect(t, "$")
+		expect(t, prompt)
 		t.Close()
 	} else {
 		scanTelnetFlag = false
