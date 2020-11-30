@@ -12,6 +12,9 @@ var (
 	ScanFuncMap map[string]ScanFunc
 )
 
+/*
+
+ */
 func init() {
 	ScanFuncMap = make(map[string]ScanFunc)
 	ScanFuncMap["FTP"] = ScanFtp
@@ -27,4 +30,8 @@ func init() {
 	ScanFuncMap["SMTP"] = ScanSmtp
 	ScanFuncMap["IMAP"] = ScanImap
 	ScanFuncMap["POP3"] = ScanPop3
+	ScanFuncMap["ORACLE"] = ScanOracle
+	ScanFuncMap["TOMCAT"] = ScanTomcat
+	ScanFuncMap["RDP"] = ScanRdp
+	ScanFuncMap["DB2"] = ScanDb2
 }
