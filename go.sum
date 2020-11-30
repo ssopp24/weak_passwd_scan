@@ -14,6 +14,8 @@ github.com/gosnmp/gosnmp v1.28.0/go.mod h1:pJUhjlccw5++Tz3HcH/WI9SgnQ/trnmfpFUnO
 github.com/jlaffaye/ftp v0.0.0-20201112195030-9aae4d151126 h1:ly2C51IMpCCV8RpTDRXgzG/L9iZXb8ePEixaew/HwBs=
 github.com/jlaffaye/ftp v0.0.0-20201112195030-9aae4d151126/go.mod h1:2lmrmq866uF2tnje75wQHzmPXhmSWUt7Gyx2vgK1RCU=
 github.com/martinlindhe/base36 v1.0.0/go.mod h1:+AtEs8xrBpCeYgSLoY/aJ6Wf37jtBuR0s35750M27+8=
+github.com/netxfly/mysql v1.0.3 h1:QrT9Ow+dfuvb8DC58MGtFo/EBUJpYWP+tvYshvmX1Uk=
+github.com/netxfly/mysql v1.0.3/go.mod h1:YU8fEumTrQL3HPUxH5VlTxU+SCIPj5930NhtFohQnQY=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stacktitan/smb v0.0.0-20190531122847-da9a425dceb8 h1:GVFkBBJAEO3CpzIYcDDBdpUObzKwVW9okNWcLYL/nnU=
 github.com/stacktitan/smb v0.0.0-20190531122847-da9a425dceb8/go.mod h1:phLSETqH/UJsBtwDVBxSfJKwwkbJcGyy2Q/h4k+bmww=

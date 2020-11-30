@@ -8,6 +8,6 @@ import (
 )
 
 func TestScanMysql(t *testing.T) {
-	service := models.ScanTask{Ip: "192.168.28.191", Port: 2400, Protocol: "mysql", Username: "", Password: ""}
+	service := models.ScanTask{Ip: "192.168.28.191", Port: 2400, Protocol: "mysql", Username: "root", Password: "Zjw195126@"}
 	t.Log(plugins.ScanMysql(service))
 }

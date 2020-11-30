@@ -1,6 +1,8 @@
 package plugins
 
 import (
+	_ "github.com/netxfly/mysql"
+
 	"weak_passwd_scan/models"
 
 	"database/sql"
