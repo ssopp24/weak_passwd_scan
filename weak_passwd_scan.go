@@ -28,7 +28,6 @@ func main() {
 		})
 		//defer rdb.Close()
 		logs.Log.Println("")
-		logs.Log.Println("[info]	Connect redis success")
 
 		//	获取输入参数并转化格式
 		var task models.InputParam
