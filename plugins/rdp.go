@@ -8,8 +8,7 @@ package plugins
 #include <freerdp/freerdp.h>
 
 // 返回 0表示登录成功，返回 -1表示因各种原因导致的登录失败
-int ScanRdpC(char *ip, int port, char *userName, char *passWord)
-{
+int ScanRdpC(char *ip, int port, char *userName, char *passWord){
 	freerdp *instance = 0;
 	int ret = -1;
 
@@ -29,8 +28,7 @@ int ScanRdpC(char *ip, int port, char *userName, char *passWord)
 
 	int err = 0;
 	err = freerdp_get_last_error(instance->context);
-	if (err==0)
-	{
+	if (0==err){
 		ret = 0;
 	}
 	freerdp_disconnect(instance);
