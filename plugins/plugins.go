@@ -12,9 +12,6 @@ var (
 	ScanFuncMap map[string]ScanFunc
 )
 
-/*
-
- */
 func init() {
 	ScanFuncMap = make(map[string]ScanFunc)
 	ScanFuncMap["FTP"] = ScanFtp
