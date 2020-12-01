@@ -7,6 +7,6 @@ import (
 )
 
 func TestScanTomcat(t *testing.T) {
-	s := models.ScanTask{Ip: "", Port: 22, Protocol: "", Username: "", Password: ""}
+	s := models.ScanTask{Ip: "192.168.28.191", Port: 8080, Protocol: "tomcat", Username: "root", Password: "zjw195126"}
 	t.Log(plugins.ScanTomcat(s))
 }
