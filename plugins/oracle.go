@@ -14,6 +14,9 @@ func ScanOracle(s models.ScanTask) (err error, result models.ScanResult) {
 	result.Task = s
 	result.Result = false
 
+	//	运行 go test -v --count=1 oracle_test.go时，可打开此注释。修改实例名进行测试
+	//	oracleLoginInfo := fmt.Sprintf("oracle://%v:%v@%v:%v/%v", s.Username, s.Password, s.Ip, s.Port, "xe")
+
 	oracleLoginInfo := fmt.Sprintf("oracle://%v:%v@%v:%v/%v", s.Username, s.Password, s.Ip, s.Port, vars.OracleGuessSid["oracleSid"])
 	conn, err := sql.Open("oracle", oracleLoginInfo)
 	if err == nil {
