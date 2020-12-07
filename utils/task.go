@@ -5,16 +5,20 @@ utils包包含:
 	将输出结果进行格式转化并传递给redis模块
 
 	字典文件读取模块
-	不同协议相应字段MD5值计算模块x`
+	不同协议相应字段MD5值计算模块`
+	oracle-sid猜测程序
 */
 
 package utils
 
 import (
+	"bytes"
 	"fmt"
+	"os/exec"
+	"strconv"
 	"strings"
 	"sync"
-	"time"
+
 	"weak_passwd_scan/logs"
 	"weak_passwd_scan/models"
 	"weak_passwd_scan/plugins"
@@ -29,10 +33,28 @@ func Scan(task models.InputParam, scanResult *[]models.OutResult) (err error) {
 	ip := task.Ip
 	for i := 0; i < len(task.Item); i++ {
 		service := task.Item[i]
-		err := generateTask(ip, service, scanResult)
-		if err != nil {
-			logs.Log.Println("[error]	GenerateTask error: ", err.Error())
-			return err
+		// 一次generateTask函数调用对应一种协议扫描
+		// 目前Oracle扫描逻辑分为一类，其余协议扫描逻辑分为一类
+		if "ORACLE" != strings.ToUpper(service.Protocol) {
+			err := generateTask(ip, service, scanResult)
+			if err != nil {
+				logs.Log.Println("[error]	generateTask error: ", err.Error())
+				return err
+			}
+		} else {
+			sidNum, oracleSidArr := oracleSidGuess(ip, service.Port)
+			if 0 == sidNum {
+				continue
+			} else {
+				for j := 0; j < sidNum; j++ {
+					vars.OracleGuessSid["oracleSid"] = oracleSidArr[j]
+					err := generateTask(ip, service, scanResult)
+					if err != nil {
+						logs.Log.Println("[error]	generateTask error: ", err.Error())
+						return err
+					}
+				}
+			}
 		}
 	}
 
@@ -89,7 +111,7 @@ func generateTask(ip string, service models.ScanParam, scanResult *[]models.OutR
 	}
 
 	close(taskChan)
-	waitTimeout(wg, vars.TimeOut*2)
+	wg.Wait()
 
 	return nil
 }
@@ -140,7 +162,6 @@ func saveResult(err error, result models.ScanResult, sumScanResult *[]models.Out
 
 		h := hash.MakeTaskHash(k)
 		isExist := hash.SetTaskHask(h)
-
 		if !isExist {
 			vars.Mutex.Lock()
 			result := models.OutResult{Protocol: result.Task.Protocol, Port: result.Task.Port, Username: result.Task.Username, Passwd: result.Task.Password}
@@ -150,16 +171,29 @@ func saveResult(err error, result models.ScanResult, sumScanResult *[]models.Out
 	}
 }
 
-func waitTimeout(wg *sync.WaitGroup, timeout time.Duration) bool {
-	c := make(chan struct{})
-	go func() {
-		defer close(c)
-		wg.Wait()
-	}()
-	select {
-	case <-c:
-		return false
-	case <-time.After(timeout):
-		return true
+func oracleSidGuess(ip string, port int) (int, []string) {
+	/*
+		注意!
+		这里调用sidguess程序的路径值需修改，建议改为绝对路径，
+		oracle sid字典的路径值需修改，建议改为绝对路径(字典文件可放在dictionaries文件夹下)
+	*/
+	cmd := exec.Command("/download/SIDGuesser/sidguess", "-i", ip, "-p", strconv.Itoa(port), "-d", "/download/SIDGuesser/oracle_sid.txt")
+	buf, _ := cmd.Output()
+
+	arr := bytes.Split(buf, []byte("\n"))
+	arrSize := len(arr)
+
+	var oracleSidArr []string
+	var sidNum = 0
+	for i := 0; i < arrSize; i++ {
+		if bytes.Contains(arr[i], []byte("FOUND SID")) {
+			containSidLine := bytes.Split(arr[i], []byte(" "))
+			oracleSidArr = append(oracleSidArr, string(containSidLine[2]))
+			sidNum += 1
+		}
 	}
+
+	logs.Log.Println("[info]	sidNim: ", sidNum, " oracleArr: ", oracleSidArr)
+
+	return sidNum, oracleSidArr
 }

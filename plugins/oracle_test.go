@@ -7,6 +7,6 @@ import (
 )
 
 func TestScanOracle(t *testing.T) {
-	s := models.ScanTask{Ip: "", Port: 22, Protocol: "", Username: "", Password: ""}
+	s := models.ScanTask{Ip: "192.168.28.191", Port: 1521, Protocol: "oracle", Username: "system", Password: "oracle"}
 	t.Log(plugins.ScanOracle(s))
 }
