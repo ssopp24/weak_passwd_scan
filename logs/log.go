@@ -13,7 +13,7 @@ var (
 
 func init() {
 	/*
-		注意!!!!
+		注意!
 		log文件存储路径要改，建议改为绝对路径
 	*/
 	logFile, err := os.OpenFile("./logs/weak_passwd_scan.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)

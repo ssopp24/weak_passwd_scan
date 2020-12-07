@@ -8,8 +8,8 @@ import (
 )
 
 /*
-注意!
-输入参数中字典路径需为绝对路径
+	注意!
+	输入参数中字典路径需为绝对路径
 */
 func ReadUserDict(userDict string) (users []string, err error) {
 	file, err := os.Open(userDict)
@@ -34,8 +34,8 @@ func ReadUserDict(userDict string) (users []string, err error) {
 }
 
 /*
-注意!
-输入参数中字典路径需为绝对路径
+	注意!
+	输入参数中字典路径需为绝对路径
 */
 func ReadPasswordDict(passDict string) (password []string, err error) {
 	file, err := os.Open(passDict)

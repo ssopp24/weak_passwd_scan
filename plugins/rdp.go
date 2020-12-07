@@ -49,7 +49,11 @@ func ScanRdp(s models.ScanTask) (err error, result models.ScanResult) {
 	userName := C.CString(s.Username)
 	passWord := C.CString(s.Password)
 
-	// 注意:环境需提前安装freerdp软件
+	/*
+		注意!
+		环境需提前安装freerdp软件
+		且根据需要，可能需修改链接库位置，参加rdp.go第4行与第5行
+	*/
 	ret := C.ScanRdpC(ip, port, userName, passWord)
 	if ret == 0 {
 		result.Result = true
