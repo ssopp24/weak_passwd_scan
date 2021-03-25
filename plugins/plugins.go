@@ -29,6 +29,6 @@ func init() {
 	ScanFuncMap["POP3"] = ScanPop3
 	ScanFuncMap["ORACLE"] = ScanOracle
 	ScanFuncMap["TOMCAT"] = ScanTomcat
-	ScanFuncMap["RDP"] = ScanRdp
+	//ScanFuncMap["RDP"] = ScanRdp
 	ScanFuncMap["DB2"] = ScanDb2
 }

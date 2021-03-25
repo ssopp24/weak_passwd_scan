@@ -15,6 +15,7 @@ require (
 	github.com/stacktitan/smb v0.0.0-20190531122847-da9a425dceb8
 	github.com/taknb2nch/go-pop3 v0.0.0-20140407022049-72f6fae12d45
 	github.com/ziutek/telnet v0.0.0-20180329124119-c3b780dc415b
-	golang.org/x/crypto v0.0.0-20190325154230-a5d413f7728c
+	go.mongodb.org/mongo-driver v1.4.4
+	golang.org/x/crypto v0.0.0-20190530122614-20be4c3c3ed5
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
 )
