@@ -8,6 +8,6 @@ import (
 )
 
 func TestScanMongodb(t *testing.T) {
-	s := models.ScanTask{Ip: "192.168.28.191", Port: 27017, Protocol: "mongodb", Username: "myUserAdmin", Password: "Zjw195126@"}
+	s := models.ScanTask{Ip: "127.0.0.1", Port: 27017, Protocol: "mongodb", Username: "admin", Password: "123456"}
 	t.Log(plugins.ScanMongodb(s))
 }

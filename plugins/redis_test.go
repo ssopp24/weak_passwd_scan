@@ -8,6 +8,6 @@ import (
 )
 
 func TestScanRedis(t *testing.T) {
-	s := models.ScanTask{Ip: "192.168.28.191", Port: 6379, Password: "Zjw195126@"}
+	s := models.ScanTask{Ip: "192.168.28.191", Port: 6379, Password: ""}
 	t.Log(plugins.ScanRedis(s))
 }

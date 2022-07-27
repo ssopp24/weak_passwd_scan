@@ -13,7 +13,7 @@ func ScanMongodb(s models.ScanTask) (err error, result models.ScanResult) {
 	result.Task = s
 	result.Result = false
 
-	url := fmt.Sprintf("mongodb://%v:%v@%v:%v/%v", s.Username, s.Password, s.Ip, s.Port, "test")
+	url := fmt.Sprintf("mongodb://%v:%v@%v:%v/%v", s.Username, s.Password, s.Ip, s.Port, "admin")
 	session, err := mgo.DialWithTimeout(url, vars.TimeOut)
 	if err == nil {
 		defer session.Close()
